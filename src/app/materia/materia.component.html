@@ -1,0 +1,53 @@
+<button type="button" class="btn" data-toggle="modal" [attr.data-target]="'#'+ materia.shortName" [ngClass]="{'btn-dark': showAsDark(), 'btn-primary ': isMouseOver, 'btn-success': showAsRequirement(), 'btn-danger': showAsCorrelative(), 'condicional': materia.condicional}" (mouseover)="isMouseOver = true" (mouseleave)="isMouseOver = false">
+    {{materia.nombre}}
+
+    <span class="badge badge-light" *ngIf="materia.cursadaAprobada" [ngClass]= "{'bg-success': materia.finalAprobado, 'bg-warning': !materia.finalAprobado}" >
+        {{materia.getNota()}}
+    </span>
+</button>
+
+  <div class="modal fade" id={{materia.shortName}} tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">{{materia.nombre}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                  <span class="input-group-text bg-warning text-dark" id="basic-addon1">Cursada</span>
+                </div>
+                <input type="number" min="4" max="10" (change)="actualizarCursadaAprobada()" [(ngModel)]="materia.notaCursada"class="form-control" placeholder="Nota" aria-label="Nota de cursada" aria-describedby="basic-addon1">
+              </div>
+              <div class="input-group input-group-sm mb-1">
+                <div class="input-group-prepend">
+                  <span class="input-group-text bg-success text-white" id="basic-addon1">Final</span>
+                </div>
+                <input type="number" min="4" max="10" (change)="actualizarFinalAprobado()" [(ngModel)]="materia.notaFinal" class="form-control" placeholder="Nota" aria-label="Nota de final" aria-describedby="basic-addon1">
+              </div>
+
+              <div class="input-group mb-1 d-flex justify-content-center">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <input type="checkbox" aria-label="Checkbox for following text input">
+                    <label class="form-check-label text-dark" for="exampleCheck1">&nbsp; Promocionada</label>
+                </div>
+                </div>
+                <div class="input-group-prepend">
+                    <div class="input-group-text bg-danger">
+                      <input type="checkbox" [(ngModel)]="materia.condicional" aria-label="Checkbox for following text input">
+                      <label class="form-check-label text-white" for="exampleCheck1">&nbsp; Condicional</label>
+                  </div>
+                  </div>
+            </div>
+            
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>

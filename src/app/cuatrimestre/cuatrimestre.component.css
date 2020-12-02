@@ -1,0 +1,9 @@
+
+.cuatrimestre{
+    display: flex;
+    justify-content: center;
+}
+
+button{
+    margin: 2px !important;
+}
