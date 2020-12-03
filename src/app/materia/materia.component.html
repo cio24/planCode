@@ -1,4 +1,4 @@
-<button type="button" class="btn" data-toggle="modal" [attr.data-target]="'#'+ materia.shortName" [ngClass]="{'btn-dark': showAsDark(), 'btn-primary ': isMouseOver, 'btn-success': showAsRequirement(), 'btn-danger': showAsCorrelative(), 'condicional': materia.condicional}" (mouseover)="isMouseOver = true" (mouseleave)="isMouseOver = false">
+<button type="button" class="btn" data-toggle="modal" [attr.data-target]="'#'+ materia.shortName" [ngClass]="{'btn-dark': showAsDark(), 'btn-primary ': isMouseOver, 'btn-success': showAsRequirement(), 'btn-danger': showAsCorrelative(), 'condicional': materia.condicional}" (mouseover)="isMouseOver = true; materia.showMateriasRequisitos(); materia.showMateriasCorrelativas()" (mouseleave)="isMouseOver = false; materia.hideMateriasRequisitos(); materia.hideMateriasCorrelativas()">
     {{materia.nombre}}
 
     <span class="badge badge-light" *ngIf="materia.cursadaAprobada" [ngClass]= "{'bg-success': materia.finalAprobado, 'bg-warning': !materia.finalAprobado}" >

@@ -10,6 +10,7 @@ export class MateriaComponent implements OnInit {
 
   @Input()
   public materia!: Materia;
+  
   public pass!: string;
   
   public isMouseOver: boolean;
