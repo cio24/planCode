@@ -1,30 +1,57 @@
 export class Materia {
     
     public nombre: string;
-    public shortName: string;
-    public finalAprobado: boolean;
+    public id: string;
+    public tipo:string;
+
     public cursadaAprobada: boolean;
+    public finalAprobado: boolean;
     public promocionada: boolean;
     public condicional: boolean;
-    public notaCursada: number;
-    public notaFinal: number;
-    public requisitosDirectos: Set<Materia>;
     public showAscorrelative: boolean;
     public showAsRequirement: boolean;
-    public todasLasMaterias!: Set<Materia>;
 
-    constructor(nombre: string, shortName: string){
-        this.nombre = nombre;
-        this.shortName = shortName;
-        this.cursadaAprobada = false;
-        this.finalAprobado = false;
-        this.promocionada = false;
-        this.condicional = false;
-        this.notaFinal = 0;
-        this.notaCursada = 0;
+    public notaCursada: number;
+    public notaFinal: number;
+
+    public equivalencias!: Set<string>;
+    public requisitosDirectosCursada: Set<Materia>;
+    public requisitosFinal: Set<Materia>;
+    public todasLasMaterias: Materia[];
+
+    constructor(materiaJson: any, todasLasMaterias: Materia[]){
+        this.nombre = materiaJson.nombre;
+        this.id = materiaJson.id;
+        this.tipo = materiaJson.tipo;
+
+        this.cursadaAprobada = (materiaJson.cursadaAprobada == "true");
+        this.finalAprobado = (materiaJson.finalAprobado == "true");
+        this.promocionada = (materiaJson.promocionada == "true");
+        this.condicional = (materiaJson.condicional == "true");
         this.showAscorrelative = false;
         this.showAsRequirement = false;
-        this.requisitosDirectos = new Set<Materia>();
+
+        //el + delante del string lo transforma al tipo number
+        this.notaCursada = +materiaJson.notaCursada;
+        this.notaFinal = +materiaJson.notaFinal;
+
+        this.requisitosDirectosCursada = new Set<Materia>();
+        materiaJson.requisitosCursada.array.forEach((id: string) => {
+            let indice: number = +id;
+             //las materias se enumeran del 1 en adelante, pero el arreglo empieza en 0, por eso se lo pasa restando 1
+            this.requisitosDirectosCursada.add(todasLasMaterias[indice -1])
+
+        });
+
+        this.requisitosFinal = new Set<Materia>();
+        materiaJson.requisitosFinal.array.forEach((id: string) => {
+            let indice: number = +id;
+             //las materias se enumeran del 1 en adelante, pero el arreglo empieza en 0, por eso se lo pasa restando 1
+            this.requisitosFinal.add(todasLasMaterias[indice -1])
+
+        });
+
+        this.todasLasMaterias = todasLasMaterias;
     }
 
     public getNota(): number {
@@ -33,39 +60,26 @@ export class Materia {
         return this.notaCursada;
     } 
 
-    public getId(): string {
-        console.log("el id es: " + this.nombre.substring(0,this.nombre.indexOf(" ")));
-        return this.nombre.substring(0,this.nombre.indexOf(" "));
-    }
-
-    public showMateriasRequisitos(): void {
+    public getRequisitosCursada(): Set<Materia> {
         let requisitos = new Set<Materia>();
         let requisitosIndirectos : Set<Materia>;
-        for (let requisitoDirecto of this.requisitosDirectos) {
+        for (let requisitoDirecto of this.requisitosDirectosCursada) {
             requisitos.add(requisitoDirecto);
-            requisitosIndirectos = requisitoDirecto.requisitosDirectos;
-            for (let requisitoIndirecto of requisitosIndirectos)
-                requisitos.add(requisitoIndirecto);
-        }
-        for (let r of requisitos) {
-            r.showAsRequirement = true;
-        }
-    }
-
-    public getMateriasRequisito(): Set<Materia> {
-        let requisitos = new Set<Materia>();
-        let requisitosIndirectos : Set<Materia>;
-        for (let requisitoDirecto of this.requisitosDirectos) {
-            requisitos.add(requisitoDirecto);
-            requisitosIndirectos = requisitoDirecto.requisitosDirectos;
+            requisitosIndirectos = requisitoDirecto.requisitosDirectosCursada;
             for (let requisitoIndirecto of requisitosIndirectos)
                 requisitos.add(requisitoIndirecto);
         }
         return requisitos;
     }
 
-    public hideMateriasRequisitos(): void {
-        let requisitos: Set<Materia> = this.getMateriasRequisito()
+    public showRequisitosCursada(): void {
+        let requisitos = this.getRequisitosCursada();
+        for (let r of requisitos)
+            r.showAsRequirement = true;
+    }
+
+    public hideRequisitosCursada(): void {
+        let requisitos: Set<Materia> = this.getRequisitosCursada()
         for (let r of requisitos)
             r.showAsRequirement = false;
     }
@@ -73,14 +87,17 @@ export class Materia {
     public getMateriasCorrelativas(): Set<Materia> {
         let materiasCorrelativas = new Set<Materia>();
         for(let materia of this.todasLasMaterias)
-            if(materia.isRequisito(this))
+            if(materia.isRequisitoCursada(this) || materia.isRequisitoFinal(this))
                 materiasCorrelativas.add(materia);
         return materiasCorrelativas;
     }
 
-    public isRequisito(materia: Materia): boolean {
-        let materiasRequisitos: Set<Materia> = this.getMateriasRequisito();
-        return materiasRequisitos.has(materia);
+    public isRequisitoCursada(materia: Materia): boolean {
+        return this.getRequisitosCursada().has(materia);
+    }
+
+    public isRequisitoFinal(materia: Materia): boolean {
+        return this.requisitosFinal.has(materia);
     }
 
     public showMateriasCorrelativas(): void {
