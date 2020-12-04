@@ -1,20 +1,24 @@
 <
   
-<button type="button" class="btn" data-toggle="modal" [attr.data-target]="'#'+ materia.getId()" 
-        [ngClass]="{'btn-dark': showAsDark(), 'btn-primary ': isMouseOver, 'btn-success': showAsRequirement(),
-                  'btn-danger': showAsCorrelative(), 
-                  'condicional': materia.condicional}"
+<button type="button" class="btn" data-toggle="modal" [attr.data-target]="'#'+ materia.getId() + materia.id" 
+        [ngClass]="{
+                    'btn-dark': showAsDark(),
+                    'btn-primary ': isMouseOver,
+                    'btn-success': showAsRequirement(),
+                    'btn-danger': showAsCorrelative(), 
+                    'condicional': materia.condicional
+                  }"
         (mouseover)="isMouseOver = true; materia.showRequisitosCursada(); materia.showMateriasCorrelativas()"
         (mouseleave)="isMouseOver = false; materia.hideRequisitosCursada(); materia.hideMateriasCorrelativas()">
     
-    {{materia.nombre}}
+    {{materia.nick}}
 
     <span class="badge badge-light" *ngIf="materia.cursadaAprobada" [ngClass]= "{'bg-success': materia.finalAprobado, 'bg-warning': !materia.finalAprobado}" >
         {{materia.getNota()}}
     </span>
 </button>
 
-  <div class="modal fade" [id]="materia.getId()" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" [id]="materia.getId() + materia.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
       <div class="modal-content">
         <div class="modal-header">

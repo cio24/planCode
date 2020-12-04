@@ -3,6 +3,7 @@ import { GestorDeMateriasService } from '../gestor-de-materias.service';
 export class Materia {
     
     public nombre: string;
+    public nick: string;
     public id: string;
     public tipo:string;
 
@@ -23,6 +24,7 @@ export class Materia {
 
     constructor(materiaJson: any, gestorDeMaterias: GestorDeMateriasService){
         this.nombre = materiaJson.nombre;
+        this.nick = materiaJson.nick;
         this.id = materiaJson.id;
         
         this.tipo = materiaJson.tipo;
