@@ -1,7 +1,8 @@
-<button type="button" class="btn" data-toggle="modal" [attr.data-target]="'#'+ materia.getId() + materia.id" 
+<button type="button" class="btn" data-toggle="modal" (click)="materia.hideModal = false" [attr.data-target]="'#'+ materia.getId() + materia.id" 
         [ngClass]="{
-                    'btn-outline-dark': showAsDark(),
-                    'btn-outline-primary ': isMouseOver,
+                    'btn-outline-dark': showAsLight(),
+                    'btn-dark': showAsDark(),
+                    'btn-primary ': isMouseOver,
                     'btn-success': showAsRequirement(),
                     'btn-danger': showAsCorrelative(), 
                     'condicional': materia.condicional
@@ -11,17 +12,19 @@
     
     {{materia.nick}}
 
-    <span class="badge badge-light" *ngIf="materia.cursadaAprobada" [ngClass]= "{'bg-success': materia.finalAprobado, 'bg-warning': !materia.finalAprobado}" >
+    <span class="badge badge-light" *ngIf="materia.cursadaAprobada" [ngClass]= "{
+                                                                                  'bg-success': materia.finalAprobado,
+                                                                                  'bg-warning': !materia.finalAprobado}" >
         {{materia.getNota()}}
     </span>
 </button>
 
   <div class="modal fade" [id]="materia.getId() + materia.id" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-      <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-sm b" role="document">
+      <div class="modal-content" [ngClass]="{'dark':gestorDeMaterias.dark,'light': !gestorDeMaterias.dark}">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">{{materia.nombre}}</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <h5 [ngClass]="{'dark':gestorDeMaterias.dark,'light': !gestorDeMaterias.dark}" cclass="modal-title" id="exampleModalLabel">{{materia.nombre}}</h5>
+          <button type="button" class="close" (click)="materia.hideModal = true" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -30,20 +33,20 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text bg-warning text-dark" id="basic-addon1">Cursada</span>
                 </div>
-                <input type="number" min="4" max="10" (change)="actualizarCursadaAprobada()" [(ngModel)]="materia.notaCursada"class="form-control" placeholder="Nota" aria-label="Nota de cursada" aria-describedby="basic-addon1">
+                <input [ngStyle]="{'background-color':gestorDeMaterias.dark ? 'black' : 'white', 'color':gestorDeMaterias.dark ? 'white' : 'black'}" type="number" min="4" max="10" (change)="actualizarCursadaAprobada(); actualizarMateria()" [(ngModel)]="materia.notaCursada"class="form-control" placeholder="Nota" aria-label="Nota de cursada" aria-describedby="basic-addon1">
               </div>
               <div class="input-group input-group-sm mb-1">
                 <div class="input-group-prepend">
                   <span class="input-group-text bg-success text-white" id="basic-addon1">Final</span>
                 </div>
-                <input type="number" min="4" max="10" (change)="actualizarFinalAprobado()" [(ngModel)]="materia.notaFinal" class="form-control" placeholder="Nota" aria-label="Nota de final" aria-describedby="basic-addon1">
+                <input  [ngStyle]="{'background-color':gestorDeMaterias.dark ? 'black' : 'white', 'color':gestorDeMaterias.dark ? 'white' : 'black'}" type="number" min="4" max="10" (change)="actualizarFinalAprobado(); actualizarMateria()" [(ngModel)]="materia.notaFinal" class="form-control" placeholder="Nota" aria-label="Nota de final" aria-describedby="basic-addon1">
               </div>
 
               <div class="input-group mb-1 d-flex justify-content-center">
                 <div class="input-group-prepend">
-                  <div class="input-group-text">
+                  <div class="input-group-text" [ngClass]="{'dark':gestorDeMaterias.dark,'light': !gestorDeMaterias.dark}">
                     <input type="checkbox" aria-label="Checkbox for following text input">
-                    <label class="form-check-label text-dark" for="exampleCheck1">&nbsp; Promocionada</label>
+                    <label  [ngClass]="{'text-light':gestorDeMaterias.dark,'text-dark': !gestorDeMaterias.dark }" class="form-check-label" for="exampleCheck1">&nbsp; Promocionada</label>
                 </div>
                 </div>
                 <div class="input-group-prepend">
@@ -56,7 +59,7 @@
             
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" (click)="materia.hideModal = true"  [ngClass]="{'btn-outline-secondary':gestorDeMaterias.dark,'btn-secondary': !gestorDeMaterias.dark }" class="btn" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>

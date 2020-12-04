@@ -6,3 +6,13 @@
 button{
     margin: 2px !important;
 }
+
+.dark{
+    background-color: black;
+    color: white;
+}
+
+.light{
+    background-color: white;
+    color:black;
+}

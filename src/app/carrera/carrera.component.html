@@ -2,5 +2,8 @@
     Por cada anio que haya definido en la carrera voy a crear un componente anio y le 
     voy a pasar un objeto del tipo interfaz anio con las materias del primer y segundo cuatrimestre
 -->
-
+<h1 [ngClass]="{'dark': gestorDeMaterias.dark, 'light': !gestorDeMaterias.dark}">Ingeniería de Sistemas</h1>
+<div class="container">
+    <button (click)="changeBackground()" [ngClass]="{'btn-outline-light': gestorDeMaterias.dark, 'btn-outline-dark': !gestorDeMaterias.dark}" class="btn">{{gestorDeMaterias.mode}} Mode</button>
+</div>
 <app-anio *ngFor="let anio of anios" [anio]="anio"></app-anio>

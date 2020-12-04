@@ -17,7 +17,7 @@ export class MateriaComponent implements OnInit {
   public isMouseOver: boolean;
   public final!: number;
 
-  constructor(private gestorDeMaterias: GestorDeMateriasService) {
+  constructor(public gestorDeMaterias: GestorDeMateriasService) {
     this.isMouseOver = false;
   }
 
@@ -26,7 +26,11 @@ export class MateriaComponent implements OnInit {
   }
 
   public showAsDark(): boolean {
-    return !this.materia.showAscorrelative && !this.materia.showAsRequirement && !this.isMouseOver;
+    return !this.materia.showAscorrelative && !this.materia.showAsRequirement && !this.isMouseOver && this.gestorDeMaterias.dark;
+  }
+
+  public showAsLight(): boolean {
+    return !this.materia.showAscorrelative && !this.materia.showAsRequirement && !this.isMouseOver && !this.gestorDeMaterias.dark;
   }
 
   public showAsCorrelative(): boolean {
@@ -38,17 +42,21 @@ export class MateriaComponent implements OnInit {
   }
   
   public actualizarFinalAprobado(): void {
-    if(this.materia.notaFinal < 4 ||this.materia.notaFinal > 10)
+    if(this.materia.notaFinal < 4 || this.materia.notaFinal > 10)
       this.materia.finalAprobado = false;
     else
       this.materia.finalAprobado = true;
   }
 
   public actualizarCursadaAprobada(): void {
-    if(this.materia.notaCursada < 4 ||this.materia.notaCursada > 10)
+    if(this.materia.notaCursada < 4 || this.materia.notaCursada > 10)
       this.materia.cursadaAprobada = false;
     else
       this.materia.cursadaAprobada = true;
+  }
+
+  public actualizarMateria(): void {
+    this.gestorDeMaterias.actualizarMateria(this.materia);
   }
 
 }

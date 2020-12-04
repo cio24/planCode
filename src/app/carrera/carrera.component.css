@@ -1,0 +1,13 @@
+
+h1{
+    display: flex;
+    justify-content: center;
+}
+
+.dark{
+    color: white;
+}
+
+.light{
+    color: black;
+}

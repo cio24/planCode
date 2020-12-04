@@ -13,33 +13,41 @@ export class Materia {
     public condicional: boolean;
     public showAscorrelative: boolean;
     public showAsRequirement: boolean;
+    public hideModal: boolean;
 
     public notaCursada: number;
     public notaFinal: number;
+    public anio: string;
+    public cuatrimiestre: string;
+    public pos: number;
 
     public equivalencias!: Set<string>;
     public requisitosDirectosCursada!: Set<Materia>;
-    public requisitosFinal!: Set<Materia>;
+    public requisitosFinal: Set<Materia>;
     public todasLasMaterias!: Materia[];
 
-    constructor(materiaJson: any, gestorDeMaterias: GestorDeMateriasService){
+    constructor(materiaJson: any, cuatrimestre:string, anio:string, pos: number, gestorDeMaterias: GestorDeMateriasService){
         this.nombre = materiaJson.nombre;
         this.nick = materiaJson.nick;
         this.id = materiaJson.id;
-        
+        this.cuatrimiestre = cuatrimestre;
+        this.anio = anio;
+        this.pos = pos;
         this.tipo = materiaJson.tipo;
 
-        this.cursadaAprobada = (materiaJson.cursadaAprobada == "true");
-        this.finalAprobado = (materiaJson.finalAprobado == "true");
-        this.promocionada = (materiaJson.promocionada == "true");
-        this.condicional = (materiaJson.condicional == "true");
+        this.cursadaAprobada = materiaJson.cursadaAprobada === "true";
+        this.finalAprobado = materiaJson.finalAprobado === "true";
+        this.promocionada = materiaJson.promocionada === "true";
+        this.condicional = materiaJson.condicional === "true";
         this.showAscorrelative = false;
         this.showAsRequirement = false;
+        this.hideModal = true;
 
         //el + delante del string lo transforma al tipo number
         this.notaCursada = +materiaJson.notaCursada;
         this.notaFinal = +materiaJson.notaFinal;
         
+        this.equivalencias = new Set<string>();
         this.requisitosDirectosCursada = new Set<Materia>();
         if(materiaJson.hasOwnProperty("requisitosCursada")){
            materiaJson.requisitosCursada.forEach((id: string) => {
@@ -49,6 +57,7 @@ export class Materia {
    
            });
         }
+
         this.requisitosFinal = new Set<Materia>();
         if(materiaJson.hasOwnProperty("requisitosFinal")){
             materiaJson.requisitosFinal.forEach((id: string) => {
