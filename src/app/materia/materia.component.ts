@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { GestorDeMateriasService } from '../gestor-de-materias.service';
 import { Materia } from './Materia';
 
 @Component({
@@ -16,11 +17,12 @@ export class MateriaComponent implements OnInit {
   public isMouseOver: boolean;
   public final!: number;
 
-  constructor() {
+  constructor(private gestorDeMaterias: GestorDeMateriasService) {
     this.isMouseOver = false;
   }
 
   ngOnInit(): void {
+    this.materia.todasLasMaterias = this.gestorDeMaterias.todasLasMaterias;
   }
 
   public showAsDark(): boolean {

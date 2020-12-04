@@ -1,6 +1,10 @@
+<!--
+  por cada materia en el cuatrimestre, se crea un componente del tipo materia y un boton que indica el numero de cuatrimestre
+-->
+
 <div class="cuatrimestre">
     <app-materia *ngFor="let materia of materias" [materia]="materia"></app-materia>
-    <button type="button" class="btn badge badge-pill btn-outline-dark">
+    <button type="button" class="btn badge badge-pill btn-secondary">
         {{semesterNumber}}°C
       </button>
 </div>

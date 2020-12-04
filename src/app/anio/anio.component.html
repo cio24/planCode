@@ -1,2 +1,6 @@
-<app-cuatrimestre [semesterNumber]=1 [materias]="primerCuatrimestre"></app-cuatrimestre>
-<app-cuatrimestre [semesterNumber]=2 [materias]="segundoCuatrimestre"></app-cuatrimestre>
+<!--
+    Se crea un componente cuatrimestre para cada componenete y se le pasa la lista de materias correspondientes
+-->
+
+<app-cuatrimestre [semesterNumber]=1 [materias]="anio[0]"></app-cuatrimestre>
+<app-cuatrimestre [semesterNumber]=2 [materias]="anio[1]"></app-cuatrimestre>

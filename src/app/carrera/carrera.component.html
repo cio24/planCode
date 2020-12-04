@@ -1,0 +1,6 @@
+<!--
+    Por cada anio que haya definido en la carrera voy a crear un componente anio y le 
+    voy a pasar un objeto del tipo interfaz anio con las materias del primer y segundo cuatrimestre
+-->
+
+<app-anio *ngFor="let anio of anios" [anio]="anio"></app-anio>

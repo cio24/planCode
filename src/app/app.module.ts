@@ -8,19 +8,23 @@ import { CommonModule } from '@angular/common';
 import { CuatrimestreComponent } from './cuatrimestre/cuatrimestre.component';
 import { FormsModule } from '@angular/forms';
 import { AnioComponent } from './anio/anio.component';
+import { CarreraComponent } from './carrera/carrera.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
     MateriaComponent,
     CuatrimestreComponent,
-    AnioComponent
+    AnioComponent,
+    CarreraComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     CommonModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

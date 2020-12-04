@@ -1,3 +1,5 @@
+import { GestorDeMateriasService } from '../gestor-de-materias.service';
+
 export class Materia {
     
     public nombre: string;
@@ -15,13 +17,14 @@ export class Materia {
     public notaFinal: number;
 
     public equivalencias!: Set<string>;
-    public requisitosDirectosCursada: Set<Materia>;
-    public requisitosFinal: Set<Materia>;
-    public todasLasMaterias: Materia[];
+    public requisitosDirectosCursada!: Set<Materia>;
+    public requisitosFinal!: Set<Materia>;
+    public todasLasMaterias!: Materia[];
 
-    constructor(materiaJson: any, todasLasMaterias: Materia[]){
+    constructor(materiaJson: any, gestorDeMaterias: GestorDeMateriasService){
         this.nombre = materiaJson.nombre;
         this.id = materiaJson.id;
+        
         this.tipo = materiaJson.tipo;
 
         this.cursadaAprobada = (materiaJson.cursadaAprobada == "true");
@@ -34,24 +37,25 @@ export class Materia {
         //el + delante del string lo transforma al tipo number
         this.notaCursada = +materiaJson.notaCursada;
         this.notaFinal = +materiaJson.notaFinal;
-
+        
         this.requisitosDirectosCursada = new Set<Materia>();
-        materiaJson.requisitosCursada.array.forEach((id: string) => {
-            let indice: number = +id;
-             //las materias se enumeran del 1 en adelante, pero el arreglo empieza en 0, por eso se lo pasa restando 1
-            this.requisitosDirectosCursada.add(todasLasMaterias[indice -1])
-
-        });
-
+        if(materiaJson.hasOwnProperty("requisitosCursada")){
+           materiaJson.requisitosCursada.forEach((id: string) => {
+               let indice: number = +id;
+                //las materias se enumeran del 1 en adelante, pero el arreglo empieza en 0, por eso se lo pasa restando 1
+               this.requisitosDirectosCursada.add(gestorDeMaterias.todasLasMaterias[indice -1])
+   
+           });
+        }
         this.requisitosFinal = new Set<Materia>();
-        materiaJson.requisitosFinal.array.forEach((id: string) => {
-            let indice: number = +id;
-             //las materias se enumeran del 1 en adelante, pero el arreglo empieza en 0, por eso se lo pasa restando 1
-            this.requisitosFinal.add(todasLasMaterias[indice -1])
+        if(materiaJson.hasOwnProperty("requisitosFinal")){
+            materiaJson.requisitosFinal.forEach((id: string) => {
+                let indice: number = +id;
+                //las materias se enumeran del 1 en adelante, pero el arreglo empieza en 0, por eso se lo pasa restando 1
+                this.requisitosFinal.add(gestorDeMaterias.todasLasMaterias[indice -1])
 
-        });
-
-        this.todasLasMaterias = todasLasMaterias;
+            });
+        }
     }
 
     public getNota(): number {
@@ -61,15 +65,13 @@ export class Materia {
     } 
 
     public getRequisitosCursada(): Set<Materia> {
-        let requisitos = new Set<Materia>();
-        let requisitosIndirectos : Set<Materia>;
+        let requisitos = new Set<Materia>([...this.requisitosDirectosCursada,...this.requisitosFinal]);
+        let ri: Set<Materia> = new Set<Materia>();
         for (let requisitoDirecto of this.requisitosDirectosCursada) {
-            requisitos.add(requisitoDirecto);
-            requisitosIndirectos = requisitoDirecto.requisitosDirectosCursada;
-            for (let requisitoIndirecto of requisitosIndirectos)
-                requisitos.add(requisitoIndirecto);
+             ri = new Set<Materia>([...ri,...requisitoDirecto.getRequisitosCursada()]);
+             ri = new Set<Materia>([...ri,...requisitoDirecto.requisitosFinal]);
         }
-        return requisitos;
+        return requisitos = new Set<Materia>([...requisitos,...ri]);
     }
 
     public showRequisitosCursada(): void {
@@ -97,7 +99,7 @@ export class Materia {
     }
 
     public isRequisitoFinal(materia: Materia): boolean {
-        return this.requisitosFinal.has(materia);
+            return this.requisitosFinal.has(materia);
     }
 
     public showMateriasCorrelativas(): void {
@@ -110,6 +112,10 @@ export class Materia {
         let requisitos: Set<Materia> = this.getMateriasCorrelativas();
         for (let r of requisitos)
             r.showAscorrelative = false;
+    }
+
+    public getId(): string{
+        return this.nombre.substring(0,this.nombre.indexOf(" "));
     }
 
 }
